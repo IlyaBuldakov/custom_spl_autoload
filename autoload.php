@@ -1,31 +1,19 @@
 <?php
 
-$loadedClasses = [];
+spl_autoload_register('autoload');
 
-$config = json_decode(file_get_contents('config.json'));
-$path = $config->name;
-
-$properties = get_object_vars($path);
-
-$namespace = array_key_first($properties);
-$src = $properties[$namespace];
-
-function loadClass($class)
+function autoload(string $classname)
 {
-    global $namespace, $src, $loadedClasses;
-
-    if (in_array($class, $loadedClasses)) {
-        echo "$class уже загружен в память. Пропускаем.";
-        return;
-    }
-
-    if (str_starts_with($class, $namespace)) {
-        $oldClassName = $class;
-        $class = str_replace($namespace, '', $class);
-        require $src . '\\' . $class . '.php';
-        $loadedClasses[] = $oldClassName;
-        echo "$oldClassName загружен <br>";
+    $config = json_decode(file_get_contents('config.json'))->autoload;
+    if ($config) {
+        $explodedName = explode('\\', $classname);
+        $parentNamespace = array_shift($explodedName);
+        foreach ($config as $key => $value) {
+            if ($parentNamespace === $key) {
+                require $value . '/' . implode('/', $explodedName) . '.php';
+            }
+        }
+    } else {
+        throw new Exception('Автозагрузка PSR-4 не сконфигурирована. Укажите родительскую директорию классов.');
     }
 }
-
-spl_autoload_register('loadClass');

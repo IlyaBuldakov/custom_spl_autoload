@@ -1,5 +1,5 @@
 {
-  "name": {
-    "ApplicationClasses": "src"
+  "autoload": {
+    "ParentNamespace": "src"
   }
 }

@@ -1,20 +1,9 @@
 <?php
 
-use ApplicationClasses\controller\Controller;
-use ApplicationClasses\model\User;
-use ApplicationClasses\Service;
+use ParentNamespace\Subdir\Clazz;
 
 require 'autoload.php';
 
-$service = new Service();
-$service->method();
+$class = new Clazz();
 
-echo '<br>';
-
-$controller = new Controller();
-$controller->method();
-
-echo '<br>';
-
-$user = new User();
-$user->method();
+$foo = new \ParentNamespace\Foo();
